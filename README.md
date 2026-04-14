@@ -1,6 +1,6 @@
-# NFDownloader
+# Nerd Font Downloader
 
-NFDownloader is a terminal UI for browsing, installing, and uninstalling [Nerd Fonts](https://www.nerdfonts.com/) from Linux.
+Nerd Font Downloader is a terminal UI for browsing, installing, and uninstalling [Nerd Fonts](https://www.nerdfonts.com/) from Linux.
 
 It fetches the available font list from the Nerd Fonts downloads page, shows installed fonts separately from available fonts, and installs selected fonts into your user font directory.
 

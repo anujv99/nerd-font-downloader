@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Build release archives
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          set -eu
+
+          version_without_v=${VERSION#v}
+          mkdir -p dist
+
+          for goarch in amd64 arm64; do
+            case "$goarch" in
+              amd64) archive_arch=x86_64 ;;
+              arm64) archive_arch=arm64 ;;
+            esac
+
+            archive_name="nfdownloader_${version_without_v}_Linux_${archive_arch}"
+            staging_dir="dist/${archive_name}"
+
+            mkdir -p "$staging_dir"
+
+            CGO_ENABLED=0 GOOS=linux GOARCH="$goarch" \
+              go build -trimpath -ldflags='-s -w' -o "$staging_dir/nfdownloader" .
+
+            cp README.md LICENSE "$staging_dir/"
+            tar -C dist -czf "dist/${archive_name}.tar.gz" "$archive_name"
+            rm -rf "$staging_dir"
+          done
+
+          (
+            cd dist
+            sha256sum ./*.tar.gz > checksums.txt
+          )
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.tar.gz
+            dist/checksums.txt

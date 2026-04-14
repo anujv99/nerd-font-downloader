@@ -37,6 +37,35 @@ Only `.ttf` and `.otf` files are extracted from downloaded archives.
 - `fc-cache` available on the system
 - Network access to `https://www.nerdfonts.com/font-downloads` and the Nerd Fonts GitHub releases
 
+## Installation
+
+### Quick Install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/anujv99/nerd-font-downloader/main/install.sh | sh
+```
+
+This installs `nfdownloader` to `~/.local/bin` by default.
+
+If you want a different install directory:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/anujv99/nerd-font-downloader/main/install.sh | NFDOWNLOADER_INSTALL_DIR=/your/bin sh
+```
+
+If you want to install a specific release:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/anujv99/nerd-font-downloader/main/install.sh | NFDOWNLOADER_VERSION=v0.1.0 sh
+```
+
+### Manual Installation
+
+Download the latest Linux release archive from the GitHub Releases page and extract the `nfdownloader` binary.
+
+- Linux `x86_64`
+- Linux `arm64`
+
 ## Build And Run
 
 ```bash
@@ -79,3 +108,18 @@ internal/ui/styles.go        Lipgloss styles for the TUI
 
 - This project currently uses HTML scraping rather than a formal Nerd Fonts API
 - The font list depends on the structure of the Nerd Fonts downloads page remaining compatible
+
+## Releases
+
+Pushing a tag like `v0.1.0` triggers the GitHub Actions release workflow.
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+The workflow publishes:
+
+- `nfdownloader_<version>_Linux_x86_64.tar.gz`
+- `nfdownloader_<version>_Linux_arm64.tar.gz`
+- `checksums.txt`
